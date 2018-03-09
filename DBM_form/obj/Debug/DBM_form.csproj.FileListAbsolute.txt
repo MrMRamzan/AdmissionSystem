@@ -1,0 +1,12 @@
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\bin\Debug\DBM_form.exe.config
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\bin\Debug\DBM_form.exe
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\bin\Debug\DBM_form.pdb
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.csprojResolveAssemblyReference.cache
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.frmMain.resources
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.Properties.Resources.resources
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.csproj.GenerateResource.Cache
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.exe
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.pdb
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\obj\Debug\DBM_form.frmPreference.resources
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\bin\Debug\itextsharp.dll
+C:\Users\Muhammad Ramzan\Desktop\DBM_form\DBM_form\bin\Debug\itextsharp.xml
