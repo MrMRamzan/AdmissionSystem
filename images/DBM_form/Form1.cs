@@ -19,11 +19,10 @@ namespace DBM_form
 {
     public partial class frmMain : Form
     {
-        PdfPTable tableMerit = new PdfPTable(5);
-        
+
 
         //  ARN
-        static int key;
+         static int key;
         // mail list of selected students
        static List<string> mailList = new List<string>();
         //add student information in array of person DL
@@ -57,11 +56,18 @@ namespace DBM_form
         private static frmMain MainForm = new frmMain();
         private frmMain()
         {
+
             InitializeComponent();
-            // initially button of sendmail, print meritlist and  generate meritlist should be hidden  
-            btnprintList.Visible = false;
-            btnSendMail.Visible = false;
-            btnGenerate.Visible = false;
+            if (mailList.Count > 0)
+            {
+                btnprintList.Visible = true;
+                btnSendMail.Visible = true;
+            }
+            else
+            {
+                btnprintList.Visible = false;
+                btnSendMail.Visible = false;
+            }
 
         }
         public static frmMain getMainForm()
@@ -99,8 +105,76 @@ namespace DBM_form
             {
                 list2.Add("GAT");
                 list2.Add("ILETS");
-            }           
-             
+            }
+            //=========================Merit list setting===========================//
+            /*
+             AcademicDL function call that return string
+            */
+            string strMerit;
+            string nameofSyudent;
+            // return ARN, Dept,Category,Aggregate
+            strMerit = Education.sortFirstPreferenceDegree();
+            int keyValue;
+            try
+            {
+                if (strMerit != "")
+                {
+                    string[] strinMeritList = strMerit.Split(',');
+                    float agg = float.Parse(strinMeritList[3]);
+                    keyValue = int.Parse(strinMeritList[0]);
+
+                    // get name of student
+
+                    nameofSyudent = personalStd.getNameOfstd(keyValue);
+
+                    // zero index has name and 1 email 
+                    string[] strNameEmail = nameofSyudent.Split(',');
+
+                    if (strNameEmail.Length > 0)
+                    {
+                        mailList.Add(strNameEmail[1]);
+                    }
+                    /*
+                     // ARN,Name,Depart,Category,Agg 
+                    */
+                    if (strinMeritList[2] == "A")
+                    {
+
+                        tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
+
+                        printString += "" + keyValue + "          " + strNameEmail[0] + "          " + strinMeritList[1] + "            "
+                            + strinMeritList[2] + "                  " + strinMeritList[3] + "\n";
+                    }
+                    else if (strinMeritList[2] == "B")
+                    {
+                        tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
+                        printString += "" + keyValue + "          " + strNameEmail[0] + "          " + strinMeritList[1] + "            "
+                            + strinMeritList[2] + "                  " + strinMeritList[3] + "\n";
+                    }
+                    else if (strinMeritList[2] == "C")
+                    {
+                        tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
+                        printString += "" + keyValue + "          " + strNameEmail[0] + "          " + strinMeritList[1] + "            "
+                            + strinMeritList[2] + "                   " + strinMeritList[3] + "\n";
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("Seats are not available");
+                    }
+                }
+                else
+                {
+                    // do nothing
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+
+            
+            
         // refresh main form
         MainForm.Refresh();
         }//set TOP priority function end 
@@ -387,7 +461,7 @@ namespace DBM_form
                         MessageBox.Show(ex.Message);
                     }
                     //////////check either nobtain marks are greater than total marks
-                    if (obtainM <= totalM)
+                    if (obtainM < totalM)
                     {
                         eduObject.totalMarks = totalM;
                         eduObject.obtainMarks = obtainM;
@@ -506,7 +580,7 @@ namespace DBM_form
                     //validat ethe phone number
                     if (Regex.IsMatch(txtphonenumber.Text, @"^[0-9]+$"))
                     {
-                        personInformation.phoneNumber = txtphonenumber.Text;
+                        personInformation.phoneNumber = int.Parse(txtphonenumber.Text);
                         txtphonenumber.Text = "";
                     }
                     else
@@ -533,8 +607,6 @@ namespace DBM_form
                 {
                     personInformation.gender = false;
                 }
-
-
                 // validate the email of student
                 System.Text.RegularExpressions.Regex expr = new System.Text.RegularExpressions
                          .Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
@@ -556,7 +628,6 @@ namespace DBM_form
                 {
                     MessageBox.Show(ex.Message);
                 }
-
                 personInformation.homeAddress = txtaddress.Text;
                 txtaddress.Text = "";
                 // check either academic record and test record is added then add personal 
@@ -580,9 +651,6 @@ namespace DBM_form
                     tableRecord.Rows.Add(key, personInformation.name,personInformation.fatherName ,
                         personInformation.phoneNumber,personInformation.email);
 
-                    /////// generate button visible///////
-                    btnGenerate.Visible = true;
-                    /////////////////////////////////////
                     /*
                       attach email of std to academic records AS ARN KEY
                     */
@@ -646,11 +714,7 @@ namespace DBM_form
             dataGridViewMeritList.DataSource = tableMeritList;
             //tableMeritList.Rows.Add(1,"CVL",A-3.2,B-2.3,C-22);
 
-            tableMerit.AddCell("ARN");
-            tableMerit.AddCell("Name");
-            tableMerit.AddCell("Department");
-            tableMerit.AddCell("Category");
-            tableMerit.AddCell("Aggregate");
+           
             //////////////////////////cmbox setting
             // when form load dropdown default value set
             comboxgender.SelectedIndex = 0;
@@ -668,12 +732,12 @@ namespace DBM_form
                 version += 1;
                 PdfWriter.GetInstance(doc, new FileStream("C:/Users/Muhammad Ramzan/Desktop/created" + version + ".pdf", FileMode.Create));
                 doc.Open();
-                Paragraph p = new Paragraph("           Merit List 2018   \nUNIVERSITY OF ENGINEERING & TECHNOLOGY LAHORE \n\n");
+                Paragraph p = new Paragraph("                                                Merit List 2018                     \n\nARN      " +
+                    "           Name             Department              Category             Aggregate\n" + printString + "\n\n\n"
+                    + "\n\n\n\n\nUNIVERSITY OF ENGINEERING & TECHNOLOGY LAHORE");
 
                 p.Alignment = 1;
                 doc.Add(p);
-                
-                doc.Add(tableMerit);
                 doc.Close();
                 MessageBox.Show("File is created");
             }
@@ -702,16 +766,9 @@ namespace DBM_form
             foreach(string u in mailList)
             {
                 MailMessage mail = new MailMessage("ramzan2015cs@gmail.com", u);
-                mail.Subject = "UET Lahore Admission Office ";
-                mail.Body = "Congratulations you are selected candidate of UET Lahore of session 2018  ";
-                try
-                {
-                    smtp.Send(mail);
-                    MessageBox.Show("Mail is Sended Successfully");
-                }catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                mail.Subject = "UET Lahore or Lahore Lahore a";
+                mail.Body = "O Adnan ...!";
+                smtp.Send(mail);
             }
 
             //"adnan.muhib@rocketmail.com"
@@ -727,104 +784,5 @@ namespace DBM_form
         {
             
         }
-
-        // btn generate merit list of students
-        private void btnGenerate_Click(object sender, EventArgs e)
-        {
-            // show sendmail and print button on click of generate merit list
-
-            btnprintList.Visible = true;
-            btnSendMail.Visible = true;
-            //=========================Merit list setting===========================//
-            /*
-             AcademicDL function call that return string
-            */
-            string strMerit;
-            string nameofSyudent;
-            //*************all this in for loop so call should be proper mean against each ARN************//
-
-            
-            foreach(int u in listOFARN)
-            {
-                // return ARN, Dept,Category,Aggregate
-                strMerit = Education.sortFirstPreferenceDegree();
-
-                int keyValue;
-                try
-                {
-                    if (strMerit != "")
-                    {
-                        string[] strinMeritList = strMerit.Split(',');
-                        keyValue = int.Parse(strinMeritList[0]);
-
-
-                        // get name of student
-                        nameofSyudent = personalStd.getNameOfstd(keyValue);
-
-                        // zero index has name and 1 email 
-                        string[] strNameEmail = nameofSyudent.Split(',');
-
-                        try
-                        {
-                            if (strNameEmail.Length > 0)
-                            {
-                                /////////////////Collect mail of selected students
-                                mailList.Add(strNameEmail[1]);
-                            }
-                        }catch(Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                        /*
-                         // ARN,Name,Depart,Category,Agg 
-                        */
-                        if (strinMeritList[2] == "A")
-                        {
-
-                            tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
-                            tableMerit.AddCell(""+keyValue);
-                            tableMerit.AddCell(strNameEmail[0]);
-                            tableMerit.AddCell(strinMeritList[1]);
-                            tableMerit.AddCell(strinMeritList[2]);
-                            tableMerit.AddCell(strinMeritList[3]);
-                        }
-                        else if (strinMeritList[2] == "B")
-                        {
-                            tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
-                            tableMerit.AddCell("" + keyValue);
-                            tableMerit.AddCell(strNameEmail[0]);
-                            tableMerit.AddCell(strinMeritList[1]);
-                            tableMerit.AddCell(strinMeritList[2]);
-                            tableMerit.AddCell(strinMeritList[3]);
-                        }
-                        else if (strinMeritList[2] == "C")
-                        {
-                            tableMeritList.Rows.Add(keyValue, strNameEmail[0], strinMeritList[1], strinMeritList[2], strinMeritList[3]);
-                            tableMerit.AddCell("" + keyValue);
-                            tableMerit.AddCell(strNameEmail[0]);
-                            tableMerit.AddCell(strinMeritList[1]);
-                            tableMerit.AddCell(strinMeritList[2]);
-                            tableMerit.AddCell(strinMeritList[3]);
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("Seats are not available");
-                        }
-                    }
-                    else
-                    {
-                        // do nothing
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
-
-            }// foreach loop for merit list generation
-
-
-        }// event of generate merit list
     }// form is ended
 }// project is ended

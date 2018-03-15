@@ -5,16 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace DBM_form
 {
     class AcademicDL
     {
         PreferenceDL objPreferenceDL = new PreferenceDL();
-
-        // count the ARN for each call
-        int countARN_Call = 0;
         /*
          Take toal marks of FSc and Obatined for Aggregate 
         */
@@ -148,49 +144,28 @@ namespace DBM_form
 
         public string sortFirstPreferenceDegree()
         {
-
            // sorting the list in desending order
            DegreeInfo= DegreeInfo.OrderByDescending(o => o.Aggregate).ToList();
 
-            // string will have dept name and category
-            try
-            {
-                preferDepart = objPreferenceDL.firstPreference(DegreeInfo[countARN_Call].ARN);
 
-                if (preferDepart != "")
-                {
-                    countARN_Call += 1;
-                    // add ARN number and aggregate of student and return it to generate button
-                    return "" + DegreeInfo[countARN_Call - 1].ARN + "," + preferDepart + "," + DegreeInfo[countARN_Call - 1].Aggregate;
-                }
-            }catch(Exception ex)
+            foreach(AcademicDTO u in DegreeInfo)
             {
-                MessageBox.Show(ex.Message);
+                if (u.Aggregate != 0)
+                {
+                    //function to take first preference of student
+                    // from the preference DL class
+                    preferDepart = objPreferenceDL.firstPreference(u.ARN);
+
+                    // check either there is capacity in the prefered depart
+                    if (preferDepart != "")
+                    {
+                        return ""+u.ARN + "," + preferDepart +","+ u.Aggregate;
+                    }
+                    return "";
+                }
             }
             return "";
-
-
-
-
-            //foreach (AcademicDTO u in DegreeInfo)
-            //{
-            //    if (u.Aggregate != 0)
-            //    {
-            //        //function to take first preference of student
-            //        // from the preference DL class
-            //        preferDepart = objPreferenceDL.firstPreference(u.ARN);
-
-            //        // check either there is capacity in the prefered depart
-            //        if (preferDepart != "")
-            //        {
-            //            return ""+u.ARN + "," + preferDepart +","+ u.Aggregate;
-            //        }
-            //        return "";
-            //    }
-            //}
-            //return "";
-
-        }//fun end here
+        }
 
 
     }// class end 

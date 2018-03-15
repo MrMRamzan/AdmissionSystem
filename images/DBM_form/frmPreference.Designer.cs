@@ -56,7 +56,7 @@
             // 
             // btnpreference
             // 
-            this.btnpreference.ForeColor = System.Drawing.Color.Blue;
+            this.btnpreference.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnpreference.Location = new System.Drawing.Point(645, 77);
             this.btnpreference.Name = "btnpreference";
             this.btnpreference.Size = new System.Drawing.Size(75, 23);
@@ -125,7 +125,6 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.ForeColor = System.Drawing.Color.Blue;
             this.button1.Location = new System.Drawing.Point(677, 400);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
